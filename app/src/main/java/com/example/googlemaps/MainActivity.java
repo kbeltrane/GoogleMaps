@@ -1,110 +1,64 @@
 package com.example.googlemaps;
 
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import android.Manifest;
-
-
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationRequest;
 import android.os.Bundle;
-import android.os.Looper;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
-
-    public GoogleMap mMap;
-    public FusedLocationProviderClient mFusedLocationClient;
-    public LocationCallback mLocationCallback;
+    private GoogleMap Mapas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-                for (Location location : locationResult.getLocations()) {
-                    LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
-                    fetchNearbyPlaces(currentLocation);
-                }
-                mFusedLocationClient.removeLocationUpdates(mLocationCallback); // Obtiene la ubicación una sola vez
-            }
-        };
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
-            @Override
-            public View getInfoWindow(Marker marker) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(Marker marker) {
-                View v = getLayoutInflater().inflate(R.layout.custom_info_window, null);
-
-                TextView name = v.findViewById(R.id.place_name);
-                TextView address = v.findViewById(R.id.place_address);
-                ImageView logo = v.findViewById(R.id.logo);
-
-                PlaceInfo placeInfo = (PlaceInfo) marker.getTag();
-
-                name.setText(placeInfo.getName());
-                address.setText(placeInfo.getAddress());
-                logo.setImageResource(placeInfo.getLogoResourceId());
-
-                return v;
-            }
-        });
-
-        LocationRequest locationRequest = LocationRequest.CREATOR(new );
-        locationRequest.setInterval(10000); // Por ejemplo, cada 10 segundos
-        locationRequest.setFastestInterval(5000); // Intervalo más rápido: 5 segundos
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mFusedLocationClient.requestLocationUpdates(locationRequest, mLocationCallback, Looper.getMainLooper());
-        } else {
-            // Solicita el permiso de ubicación si no ha sido concedido
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        Mapas = googleMap;
+        initializeMap();
     }
 
-    private void fetchNearbyPlaces(LatLng currentLocation) {
-        // Aquí, debes hacer la llamada a la API de Google Places para obtener lugares cercanos
-        // y agregarlos como marcadores en el mapa.
+    @Override
+    public void onMapClick(@NonNull LatLng latLng) {
+
+    }
+
+    private void initializeMap() {
+        LatLng ltUteq = new LatLng(-1.024267389863566, -79.46621960993701);
+        CameraUpdate camUpdUteq = CameraUpdateFactory.newLatLngZoom(ltUteq, 15);
+        Mapas.moveCamera(camUpdUteq);
+        Mapas.getUiSettings().setZoomControlsEnabled(true);
+
+        addMarker(new LatLng(-1.0242929847081381, -79.46703649905092), "CHINISSES FOOD EXPRESS", "Restaurante", R.mipmap.iconcomido2);
+        addMarker(new LatLng(-1.023203577288594, -79.46571976799041), "SAN ANTONIO (Café-Restaurant)", "Restaurante", R.mipmap.iconcomido2);
+        addMarker(new LatLng(-1.0365430348451965, -79.46830950888014), "La Tuka Moros y Asados", "Restaurante", R.mipmap.iconcomido2);
+        addMarker(new LatLng(-1.0355775974808004, -79.47114192172303),"Cevichería El Picudo Blanco Internacional","Restaurante", R.mipmap.iconcomido2);
+        Mapas.setInfoWindowAdapter(new MyInfoWindowAdapter(this));
+    }
+
+    private void addMarker(LatLng position, String title, String snippet, int iconResId) {
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(position)
+                .title(title)
+                .snippet(snippet)
+                .icon(BitmapDescriptorFactory.fromResource(iconResId));
+        Mapas.addMarker(markerOptions);
     }
 }
+
 

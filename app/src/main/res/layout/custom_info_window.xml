@@ -7,15 +7,15 @@
     android:background="@android:color/white">
 
     <ImageView
-        android:id="@+id/logo"
+        android:id="@+id/imgFacultad"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="5dp"
-        android:src="@mipmap/ic_launcher" />  <!-- Asumiendo que usas el ícono predeterminado como logo, cambia este recurso según tus necesidades -->
+        android:src="@mipmap/picudo" />
 
     <TextView
-        android:id="@+id/place_name"
+        android:id="@+id/title3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -25,7 +25,7 @@
         android:layout_marginBottom="5dp" />
 
     <TextView
-        android:id="@+id/place_address"
+        android:id="@+id/snippet4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -33,12 +33,5 @@
         android:textSize="14sp"
         android:layout_marginBottom="5dp" />
 
-    <TextView
-        android:id="@+id/place_schedule"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Horarios"
-        android:textSize="14sp" />
 
 </LinearLayout>
