@@ -10,13 +10,10 @@
     android:paddingBottom="16dp"
     tools:context=".MainActivity">
 
-    <!-- Fragmento de Google Maps -->
     <fragment
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         class="com.google.android.gms.maps.SupportMapFragment" />
-
-    <!-- Puedes añadir otros elementos de UI si los necesitas, como botones o barras de herramientas -->
 
 </RelativeLayout>
